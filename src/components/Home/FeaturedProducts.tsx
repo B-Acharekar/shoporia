@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaShoppingBag } from 'react-icons/fa';
@@ -180,28 +181,30 @@ export default function AllProducts() {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {filtered.map((product) => (
-                                <div className="border rounded-2xl p-6 hover:shadow-xl transition bg-white text-center">
-                                    <img
-                                        src={product.image}
-                                        alt={product.title}
-                                        className="w-full h-52 object-contain mb-4 rounded-lg bg-white"
-                                    />
-                                    <h3 className="font-semibold text-lg text-zinc-900 mb-1 line-clamp-2">
-                                        {product.title}
-                                    </h3>
-                                    <p className="text-sm text-zinc-500 capitalize mb-1">{product.category}</p>
-                                    <p className="font-semibold text-xl text-black mb-4">${product.price}</p>
-                                    <Link
-                                        href={`/product-details?id=${product.id}&src=${product.source}`}
-                                        className="w-full block text-center bg-black text-white py-2 rounded-full hover:bg-gray-900 transition"
-                                    >
-                                        View Details
-                                    </Link>
-                                </div>
+                                <div key={product.id} className="border rounded-2xl p-6 hover:shadow-xl transition bg-white text-center">
+                                        <Image
+                                            src={product.image}
+                                            alt={product.title}
+                                            width={300}
+                                            height={300}
+                                            className="w-full h-52 object-contain mb-4 rounded-lg bg-white"
+                                        />
+                                        <h3 className="font-semibold text-lg text-zinc-900 mb-1 line-clamp-2">
+                                            {product.title}
+                                        </h3>
+                                        <p className="text-sm text-zinc-500 capitalize mb-1">{product.category}</p>
+                                        <p className="font-semibold text-xl text-black mb-4">${product.price}</p>
+                                        <Link
+                                            href={`/product-details?id=${product.id}&src=${product.source}`}
+                                            className="w-full block text-center bg-black text-white py-2 rounded-full hover:bg-gray-900 transition"
+                                        >
+                                            View Details
+                                        </Link>
+                                    </div>
                             ))}
-                        </div>
-                    )}
-                </main>
+                                </div>
+                            )}
+                        </main>
             </div>
         </section>
     );
