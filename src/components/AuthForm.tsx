@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { addMockUser } from '@/lib/mockUsers';
 import { useAuth } from '@/context/AuthContext';
 
 interface AuthFormProps {
@@ -38,11 +36,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         setError("Passwords do not match");
         return;
       }
-      addMockUser({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
       alert("Registered! Now log in.");
       return;
     }

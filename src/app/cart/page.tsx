@@ -73,7 +73,7 @@ export default function CartPage() {
                 <div className="relative w-full sm:w-24 h-28 bg-white rounded-lg overflow-hidden">
                   <Image
                     src={item.image}
-                    alt={item.name}
+                    alt={item.name || "Cart item image"}
                     fill
                     className="object-contain p-2"
                   />
