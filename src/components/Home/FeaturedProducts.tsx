@@ -22,7 +22,7 @@ export default function AllProducts() {
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('laptop');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('');
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
@@ -35,6 +35,8 @@ export default function AllProducts() {
         const res = await fetch(`/api/ebay?q=${encodeURIComponent(searchTerm)}`);
         const data = await res.json();
 
+        console.log("🔑 eBay raw response:", data);
+
         if (data.error) {
           console.error('eBay error:', data.error);
           setProducts([]);
@@ -42,14 +44,32 @@ export default function AllProducts() {
         }
 
         const items = data.itemSummaries || [];
-        const mapped: Product[] = items.map((item: any, idx: number) => ({
-          id: idx,
-          title: item.title,
-          price: item.price?.value ? Number(item.price.value) : 0,
-          category: item.categoryPath?.[0] || 'General',
-          image: item.image?.imageUrl || 'https://via.placeholder.com/300x300?text=No+Image',
-          source: 'ebay',
-        }));
+        console.log("📦 Parsed items:", items);
+
+        const mapped: Product[] = items.map((item: any, idx: number) => {
+          // Try to pick a valid image URL
+          let img =
+            item.image?.imageUrl ||
+            item.image?.imageUrls?.[0] ||
+            item.thumbnailImages?.[0]?.imageUrl ||
+            '';
+
+          const isValidImage = img && /\.(jpg|jpeg|png|webp)$/i.test(img);
+
+          return {
+            id: idx,
+            title: item.title || "No Title",
+            price: item.price?.value ? Number(item.price.value) : 0,
+            category:
+              item.categories?.[0]?.categoryName ||
+              item.leafCategoryIds?.[0] ||
+              'General',
+            image: isValidImage
+              ? img
+              : 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg',
+            source: 'ebay',
+          };
+        });
 
         const cats = ['all', ...Array.from(new Set(mapped.map((p) => p.category)))];
         setCategories(cats);
@@ -187,6 +207,8 @@ export default function AllProducts() {
                     alt={product.title}
                     width={300}
                     height={300}
+                    unoptimized
+                    priority 
                     className="w-full h-52 object-contain mb-4 rounded-lg bg-white"
                   />
                   <h3 className="font-semibold text-lg text-zinc-900 mb-1 line-clamp-2">
