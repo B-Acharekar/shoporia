@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-type Source = 'fake' | 'dummy';
+type Source = 'ebay';
 
 type Product = {
   id: number;
@@ -15,26 +15,6 @@ type Product = {
   source: Source;
 };
 
-type FakeStoreProduct = {
-  id: number;
-  title: string;
-  price: number;
-  category: string;
-  image: string;
-};
-
-type DummyJsonProduct = {
-  id: number;
-  title: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-};
-
-type DummyJsonResponse = {
-  products: DummyJsonProduct[];
-};
-
 type SortOrder = '' | 'asc' | 'desc';
 
 export default function AllProducts() {
@@ -42,7 +22,7 @@ export default function AllProducts() {
   const [filtered, setFiltered] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('laptop');
   const [sortOrder, setSortOrder] = useState<SortOrder>('');
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(1000);
@@ -50,48 +30,40 @@ export default function AllProducts() {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       try {
-        const [fakeRes, dummyRes] = await Promise.all([
-          fetch('https://fakestoreapi.com/products'),
-          fetch('https://dummyjson.com/products?limit=30'),
-        ]);
+        const res = await fetch(`/api/ebay?q=${encodeURIComponent(searchTerm)}`);
+        const data = await res.json();
 
-        const fakestore: FakeStoreProduct[] = await fakeRes.json();
-        const dummyJson: DummyJsonResponse = await dummyRes.json();
+        if (data.error) {
+          console.error('eBay error:', data.error);
+          setProducts([]);
+          return;
+        }
 
-        const merged: Product[] = [
-          ...fakestore.map<Product>((p) => ({
-            id: p.id,
-            title: p.title,
-            price: p.price,
-            category: p.category || 'General',
-            image: p.image || 'https://via.placeholder.com/300x300?text=No+Image',
-            source: 'fake',
-          })),
-          ...dummyJson.products.map<Product>((p) => ({
-            id: p.id + 1000,
-            title: p.title,
-            price: p.price,
-            category: p.category || 'General',
-            image: p.thumbnail || 'https://via.placeholder.com/300x300?text=No+Image',
-            source: 'dummy',
-          })),
-        ];
+        const items = data.itemSummaries || [];
+        const mapped: Product[] = items.map((item: any, idx: number) => ({
+          id: idx,
+          title: item.title,
+          price: item.price?.value ? Number(item.price.value) : 0,
+          category: item.categoryPath?.[0] || 'General',
+          image: item.image?.imageUrl || 'https://via.placeholder.com/300x300?text=No+Image',
+          source: 'ebay',
+        }));
 
-        const cats = ['all', ...Array.from(new Set(merged.map((p) => p.category)))];
-
+        const cats = ['all', ...Array.from(new Set(mapped.map((p) => p.category)))];
         setCategories(cats);
-        setProducts(merged);
-        setFiltered(merged);
+        setProducts(mapped);
+        setFiltered(mapped);
       } catch (error) {
-        console.error('Failed to load products:', error);
+        console.error('Failed to load eBay products:', error);
       } finally {
         setLoading(false);
       }
     }
 
     fetchData();
-  }, []);
+  }, [searchTerm]);
 
   useEffect(() => {
     let updated = [...products];
