@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { signIn } from "next-auth/react";
@@ -21,10 +21,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -40,7 +37,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       return;
     }
 
-    // Login
     const res = await signIn("credentials", {
       email: formData.email,
       password: formData.password,
@@ -68,68 +64,44 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
       {type === 'register' && (
         <div className="space-y-1">
-          <label htmlFor="name" className="text-sm font-medium text-neutral-700">Full Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-            className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition"
-          />
+          <label htmlFor="name">Full Name</label>
+          <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} required />
         </div>
       )}
 
       <div className="space-y-1">
-        <label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-          className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition"
-        />
+        <label htmlFor="email">Email Address</label>
+        <input type="email" name="email" id="email" value={formData.email} onChange={handleInputChange} required />
       </div>
 
       <div className="space-y-1">
-        <label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-          className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition"
-        />
+        <label htmlFor="password">Password</label>
+        <input type="password" name="password" id="password" value={formData.password} onChange={handleInputChange} required />
       </div>
 
       {type === 'register' && (
         <div className="space-y-1">
-          <label htmlFor="confirmPassword" className="text-sm font-medium text-neutral-700">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            id="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-            required
-            className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition"
-          />
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input type="password" name="confirmPassword" id="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required />
         </div>
       )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <button
-        type="submit"
-        className="w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-neutral-800 transition-colors duration-200"
-      >
+      <button type="submit" className="w-full bg-black text-white py-2 rounded-md hover:bg-neutral-800">
         {type === 'login' ? 'Sign In' : 'Sign Up'}
       </button>
+
+      {/* Google Sign-In */}
+      {type === 'login' && (
+        <button
+          type="button"
+          onClick={() => signIn("google")}
+          className="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+        >
+          Continue with Google
+        </button>
+      )}
     </form>
   );
 };
