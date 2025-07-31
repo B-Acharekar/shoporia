@@ -33,9 +33,38 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         setError("Passwords do not match");
         return;
       }
-      alert("Registered! Now log in.");
+
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || "Failed to register");
+          return;
+        }
+
+        // Auto login after signup
+        await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: true,
+          callbackUrl: "/shop",
+        });
+      } catch (err) {
+        setError("Something went wrong");
+      }
       return;
     }
+
 
     const res = await signIn("credentials", {
       email: formData.email,

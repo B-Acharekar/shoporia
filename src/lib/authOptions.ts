@@ -2,6 +2,8 @@ import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
+import User from "@/models/User";
+import { connectDB } from "./mongodb";
 
 const authOptions: AuthOptions = {
   providers: [
@@ -38,7 +40,20 @@ const authOptions: AuthOptions = {
   callbacks: {
     async redirect({ url, baseUrl }) {
       // Always go to /shop after login
-      return `${baseUrl}/home`;
+      return `${baseUrl}/shop`;
+    },
+    async signIn({ user }) {
+      await connectDB();
+      const exisitingUser = await User.findOne({ email: user.email });
+      if (!exisitingUser) {
+        await User.create({
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          role: "user",
+        });
+      }
+      return true;
     },
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
@@ -47,8 +62,11 @@ const authOptions: AuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      await connectDB();
+      const dbUser = await User.findOne({ email: session.user?.email });
       if (session.user) {
-        session.user.role = token.role;
+        session.user.role = dbUser?.role || token.role || "user";
+        session.user.id = dbUser?._id?.toString();
       }
       return session;
     },
