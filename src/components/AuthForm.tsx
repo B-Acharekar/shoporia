@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { signIn } from "next-auth/react";
 import { useAuth } from '@/context/AuthContext';
+import { showToast } from '@/lib/toast';
 
 interface AuthFormProps {
   type: 'login' | 'register';
@@ -31,6 +32,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     if (type === "register") {
       if (formData.password !== formData.confirmPassword) {
         setError("Passwords do not match");
+        showToast("error", "Passwords do not match");
         return;
       }
 
@@ -49,9 +51,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
         if (!res.ok) {
           setError(data.error || "Failed to register");
+          showToast("error", data.error || "Failed to register");
           return;
         }
 
+        showToast("success", "Account created! Logging you in...");
         // Auto login after signup
         await signIn("credentials", {
           email: formData.email,
@@ -61,11 +65,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         });
       } catch (err) {
         setError("Something went wrong");
+        showToast("error", "Something went wrong");
       }
       return;
     }
 
-
+    //Login
     const res = await signIn("credentials", {
       email: formData.email,
       password: formData.password,
@@ -74,8 +79,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
     if (res?.error) {
       setError("Invalid credentials");
+      showToast("error", "Invalid credentials");
     } else {
       login({ name: formData.name || "User", email: formData.email });
+      showToast("success", "Signed in successfully");
     }
   };
 
