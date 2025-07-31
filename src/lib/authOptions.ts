@@ -36,6 +36,10 @@ const authOptions: AuthOptions = {
   },
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Always go to /shop after login
+      return `${baseUrl}/shop`;
+    },
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.role = user.role || "user";
