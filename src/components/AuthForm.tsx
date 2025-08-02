@@ -56,7 +56,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         }
 
         showToast("success", "Account created! Logging you in...");
-        // Auto login after signup
         await signIn("credentials", {
           email: formData.email,
           password: formData.password,
@@ -70,7 +69,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       return;
     }
 
-    //Login
+    // Login
     const res = await signIn("credentials", {
       email: formData.email,
       password: formData.password,
@@ -101,24 +100,56 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       {type === 'register' && (
         <div className="space-y-1">
           <label htmlFor="name" className="text-sm font-medium text-neutral-700">Full Name</label>
-          <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} required className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" />
+          <input 
+            type="text" 
+            name="name" 
+            id="name" 
+            value={formData.name} 
+            onChange={handleInputChange} 
+            required 
+            className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" 
+          />
         </div>
       )}
 
       <div className="space-y-1">
         <label htmlFor="email" className="text-sm font-medium text-neutral-700">Email Address</label>
-        <input type="email" name="email" id="email" value={formData.email} onChange={handleInputChange} required className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" />
+        <input 
+          type="email" 
+          name="email" 
+          id="email" 
+          value={formData.email} 
+          onChange={handleInputChange} 
+          required 
+          className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" 
+        />
       </div>
 
       <div className="space-y-1">
         <label htmlFor="password" className="text-sm font-medium text-neutral-700">Password</label>
-        <input type="password" name="password" id="password" value={formData.password} onChange={handleInputChange} required className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" />
+        <input 
+          type="password" 
+          name="password" 
+          id="password" 
+          value={formData.password} 
+          onChange={handleInputChange} 
+          required 
+          className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" 
+        />
       </div>
 
       {type === 'register' && (
         <div className="space-y-1">
           <label htmlFor="confirmPassword" className="text-sm font-medium text-neutral-700">Confirm Password</label>
-          <input type="password" name="confirmPassword" id="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} required className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" />
+          <input 
+            type="password" 
+            name="confirmPassword" 
+            id="confirmPassword" 
+            value={formData.confirmPassword} 
+            onChange={handleInputChange} 
+            required 
+            className="w-full px-3 py-2 border border-neutral-300 rounded-md bg-white focus:ring-black focus:outline-none transition" 
+          />
         </div>
       )}
 
@@ -128,16 +159,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         {type === 'login' ? 'Sign In' : 'Sign Up'}
       </button>
 
-      {/* Google Sign-In */}
-      {type === 'login' && (
-        <button
-          type="button"
-          onClick={() => signIn("google", { callbackUrl: "/shop" })}
-          className="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
-        >
-          Continue with Google
-        </button>
-      )}
+      {/* Google Sign-In on both Login & Register */}
+      <button
+        type="button"
+        onClick={() => signIn("google", { callbackUrl: "/shop" })}
+        className="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+      >
+        {type === 'login' ? 'Continue with Google' : 'Sign Up with Google'}
+      </button>
     </form>
   );
 };

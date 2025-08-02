@@ -2,6 +2,7 @@ import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
+import bcrypt from "bcryptjs";
 import User from "@/models/User";
 import { connectDB } from "./mongodb";
 
@@ -18,16 +19,21 @@ const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        await connectDB();
+
         if (!credentials?.email || !credentials.password) return null;
 
-        // ⚡ Replace with DB call later
-        const isAdmin = credentials.email === "admin@shoporia.com";
+        const user = await User.findOne({ email: credentials.email });
+        if (!user) return null;
+
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password || "");
+        if (!isPasswordValid) return null;
 
         return {
-          id: credentials.email,
-          name: credentials.email.split("@")[0],
-          email: credentials.email,
-          role: isAdmin ? "admin" : "user",
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          role: user.role,
         };
       },
     }),
