@@ -8,7 +8,7 @@
 
 ## Preview
 
-![Shoporia Preview](<img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/cb8d5560-de22-49d5-96fb-784b0737824d" />)
+![Shoporia Preview](https://github.com/user-attachments/assets/cb8d5560-de22-49d5-96fb-784b0737824d)
 
 ---
 
