@@ -6,23 +6,23 @@ import Image from "next/image";
 const brands = [
   {
     name: "Apple",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+    logo: "/images/brands/apple.png",
   },
   {
     name: "Samsung",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Black_icon.svg",
+    logo: "/images/brands/samsung.png",
   },
   {
     name: "Nike",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Logo_NIKE.svg",
+    logo: "/images/brands/nike.png",
   },
   {
     name: "Sony",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Sony_logo.svg",
+    logo: "/images/brands/sony.png",
   },
   {
     name: "Lego",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/7/74/LEGO_logo.svg",
+    logo: "/images/brands/lego.png",
   },
 ];
 

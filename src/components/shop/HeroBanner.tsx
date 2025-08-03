@@ -15,7 +15,7 @@ const banners = [
   },
   {
     id: 2,
-    img: "/images/banners/electronics.jpg",
+    img: "/images/banners/electronics.png",
     title: "Electronics. Reinvented.",
     subtitle: "The brands you love, at prices you’ll love more.",
     link: "/shop?category=electronics",
