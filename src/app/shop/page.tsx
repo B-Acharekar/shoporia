@@ -1,5 +1,6 @@
 // app/shop/page.tsx
 // DO NOT include "use client" here
+
 import HeroBanner from "@/components/shop/HeroBanner";
 import CategoryCarousel from "@/components/shop/CategoryCarousel";
 import FeaturedProducts from "@/components/shop/FeaturedProducts";
@@ -9,12 +10,12 @@ import TodaysDeals from "@/components/shop/TodayDeals";
 import { Suspense } from "react";
 import SearchResults from "@/components/shop/SearchResults";
 
-type ShopPageProps = {
-  searchParams: { q?: string };
+type Props = {
+  searchParams?: { q?: string };
 };
 
-export default function ShopPage({ searchParams }: ShopPageProps) {
-  const isSearchActive = Boolean(searchParams.q?.trim());
+export default function ShopPage({ searchParams }: Props) {
+  const isSearchActive = Boolean(searchParams?.q?.trim());
 
   return (
     <div className="max-w-[1440px] mx-auto mt-10 mb-16 px-4 sm:px-8 lg:px-12 space-y-28">
@@ -25,7 +26,6 @@ export default function ShopPage({ searchParams }: ShopPageProps) {
       {!isSearchActive && (
         <>
           <HeroBanner />
-
           <section className="mt-20">
             <div className="flex justify-between items-center mb-10">
               <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -40,14 +40,11 @@ export default function ShopPage({ searchParams }: ShopPageProps) {
             </div>
             <CategoryCarousel />
           </section>
-
           <section className="bg-gradient-to-b from-gray-50 to-white py-16 px-6 rounded-3xl shadow-inner">
             <FeaturedProducts />
           </section>
-
           <RareFinds />
           <BestSellingBrands />
-
           <section className="bg-gray-50 rounded-3xl shadow-sm p-8">
             <TodaysDeals />
           </section>
