@@ -1,73 +1,37 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const banners = [
   {
     id: 1,
-    keyword: 'season sale',
-    img: '/images/banners/sales.png',
-    title: 'Biggest Deals of the Season',
-    subtitle: 'Save up to 50% on top picks',
-    link: '/shop',
+    img: "/images/banners/sales.png",
+    title: "Biggest Deals of the Season",
+    subtitle: "Save up to 50% on top picks",
+    link: "/shop",
   },
   {
     id: 2,
-    keyword: 'electronics',
-    img: '/images/banners/electronics.jpg',
-    title: 'Electronics. Reinvented.',
-    subtitle: 'The brands you love, at prices you’ll love more.',
-    link: '/shop?category=electronics',
+    img: "/images/banners/electronics.jpg",
+    title: "Electronics. Reinvented.",
+    subtitle: "The brands you love, at prices you’ll love more.",
+    link: "/shop?category=electronics",
   },
   {
     id: 3,
-    keyword: 'fashion clothes',
-    img: '/images/banners/fashions.png',
-    title: 'Fashion Without Limits',
-    subtitle: 'Elevate your style this season.',
-    link: '/shop?category=fashion',
+    img: "/images/banners/fashions.png",
+    title: "Fashion Without Limits",
+    subtitle: "Elevate your style this season.",
+    link: "/shop?category=fashion",
   },
 ];
 
-// Fetch dynamic Unsplash fallback
-async function fetchFallbackImage(productName: string): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
-        productName
-      )}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_KEY}`
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.results?.[0]?.urls?.regular || null;
-  } catch (error) {
-    console.error('Unsplash fallback failed:', error);
-    return null;
-  }
-}
-
 export default function HeroBanner() {
   const [index, setIndex] = useState(0);
-  const [images, setImages] = useState<string[]>([]);
 
-  // Load Unsplash fallback
-  useEffect(() => {
-    const loadImages = async () => {
-      const results = await Promise.all(
-        banners.map(async (banner) => {
-          const fallback = await fetchFallbackImage(banner.keyword);
-          return fallback || banner.img;
-        })
-      );
-      setImages(results);
-    };
-    loadImages();
-  }, []);
-
-  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % banners.length);
@@ -92,9 +56,11 @@ export default function HeroBanner() {
           className="absolute inset-0"
         >
           <Image
-            src={images[index] || banners[index].img}
+            src={banners[index].img}
             alt={banners[index].title}
+            fill
             className="w-full h-full object-cover"
+            priority
           />
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center px-6">
             <h2 className="text-3xl md:text-5xl font-semibold text-white drop-shadow-md tracking-tight">
@@ -134,7 +100,7 @@ export default function HeroBanner() {
             key={i}
             onClick={() => setIndex(i)}
             className={`w-3 h-3 rounded-full transition ${
-              i === index ? 'bg-white' : 'bg-white/40'
+              i === index ? "bg-white" : "bg-white/40"
             }`}
           />
         ))}
