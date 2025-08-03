@@ -13,7 +13,7 @@ const Hero = () => {
         </p>
         <div className="mt-8">
           <Link
-            href="/home"
+            href="/shop"
             className="bg-black text-white text-lg px-8 py-3 rounded-full hover:opacity-90 transition"
           >
             Start Shopping

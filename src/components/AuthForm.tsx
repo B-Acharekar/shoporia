@@ -18,7 +18,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   });
 
   const [error, setError] = useState('');
-  const { login } = useAuth();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,7 +79,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
       setError("Invalid credentials");
       showToast("error", "Invalid credentials");
     } else {
-      login({ name: formData.name || "User", email: formData.email });
       showToast("success", "Signed in successfully");
     }
   };

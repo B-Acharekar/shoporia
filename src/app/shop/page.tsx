@@ -19,7 +19,7 @@ export default function ShopPage() {
   const isSearching = queryParam.trim().length > 0;
 
   return (
-    <div className="max-w-[1440px] mx-auto mt-24 mb-16 px-4 sm:px-8 lg:px-12 space-y-28">
+    <div className="max-w-[1440px] mx-auto mt-10 mb-16 px-4 sm:px-8 lg:px-12 space-y-28">
       {!isSearching ? (
         <>
           {/* Hero Banner */}
