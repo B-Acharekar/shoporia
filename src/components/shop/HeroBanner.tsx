@@ -9,7 +9,7 @@ const banners = [
   {
     id: 1,
     keyword: 'season sale',
-    img: '/banners/sale1.jpg',
+    img: '/images/banners/sales.png',
     title: 'Biggest Deals of the Season',
     subtitle: 'Save up to 50% on top picks',
     link: '/shop',
@@ -17,7 +17,7 @@ const banners = [
   {
     id: 2,
     keyword: 'electronics',
-    img: '/banners/electronics.jpg',
+    img: '/images/banners/electronics.jpg',
     title: 'Electronics. Reinvented.',
     subtitle: 'The brands you love, at prices you’ll love more.',
     link: '/shop?category=electronics',
@@ -25,7 +25,7 @@ const banners = [
   {
     id: 3,
     keyword: 'fashion clothes',
-    img: '/banners/fashion.jpg',
+    img: '/images/banners/fashions.png',
     title: 'Fashion Without Limits',
     subtitle: 'Elevate your style this season.',
     link: '/shop?category=fashion',

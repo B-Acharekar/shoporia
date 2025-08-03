@@ -5,13 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 
 const categories = [
-  { name: "New Electronics", keywords: ["electronics", "gadgets"], fallback: "/categories/electronics.jpg" },
-  { name: "Collectibles", keywords: ["collectibles", "art", "toys"], fallback: "/categories/collectibles.jpg" },
-  { name: "Parts & Accessories", keywords: ["car parts", "automotive"], fallback: "/categories/parts.jpg" },
-  { name: "Fashion", keywords: ["fashion", "clothing", "style"], fallback: "/categories/fashion.jpg" },
-  { name: "Health & Beauty", keywords: ["beauty products", "skincare"], fallback: "/categories/beauty.jpg" },
-  { name: "Home & Garden", keywords: ["home decor", "garden"], fallback: "/categories/home.jpg" },
-  { name: "Refurbished", keywords: ["refurbished electronics", "renewed"], fallback: "/categories/refurbished.jpg" },
+  { name: "New Electronics", keywords: ["electronics", "gadgets"], fallback: "/images/categories/electronics.jpg" },
+  { name: "Collectibles", keywords: ["collectibles", "art", "toys"], fallback: "/images/categories/collectibles.jpg" },
+  { name: "Parts & Accessories", keywords: ["car parts", "automotive"], fallback: "/images/categories/parts.jpg" },
+  { name: "Fashion", keywords: ["fashion", "clothing", "style"], fallback: "/images/categories/fashion.jpg" },
+  { name: "Health & Beauty", keywords: ["beauty products", "skincare"], fallback: "/images/categories/beauty.jpg" },
+  { name: "Home & Garden", keywords: ["home decor", "garden"], fallback: "/images/categories/home.jpg" },
+  { name: "Refurbished", keywords: ["refurbished electronics", "renewed"], fallback: "/images/categories/refurbished.jpg" },
 ];
 
 async function fetchCategoryImage(keywords: string[]): Promise<string | null> {
