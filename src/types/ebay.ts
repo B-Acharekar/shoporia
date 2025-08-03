@@ -11,10 +11,11 @@ export interface EbayItem {
   additionalImages?: {
     imageUrl: string;
   }[];
-resolvedImage?: string;
-itemWebUrl?: string;
-itemAffiliateWebUrl?: string;
-
+  resolvedImage?: string;
+  itemWebUrl?: string;
+  itemAffiliateWebUrl?: string;
+  condition?: string; // added
+  subtitle?: string;  // added
 }
 
 export interface EbayResponse {

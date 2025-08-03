@@ -4,15 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FiArrowLeft } from "react-icons/fi";
-
-type CartItem = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  quantity?: number;
-};
+import { CartItem } from "@/types/cart";
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -32,14 +24,14 @@ export default function CartPage() {
     }
   }, []);
 
-  const handleRemove = (id: number) => {
+  const handleRemove = (id: string) => {
     const updatedCart = cart.filter((item) => item.id !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const total = cart.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
+    (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0
   );
 
@@ -54,7 +46,6 @@ export default function CartPage() {
         <span className="text-sm">Back to Products</span>
       </button>
 
-      {/* Page Title */}
       <h2 className="text-3xl font-semibold text-gray-900 mb-8 tracking-tight">
         Your Bag
       </h2>
@@ -72,8 +63,8 @@ export default function CartPage() {
               >
                 <div className="relative w-full sm:w-24 h-28 bg-white rounded-lg overflow-hidden">
                   <Image
-                    src={item.image}
-                    alt={item.name || "Cart item image"}
+                    src={item.image || "/no-image.png"}
+                    alt={item.title}
                     fill
                     className="object-contain p-2"
                   />
@@ -81,11 +72,13 @@ export default function CartPage() {
 
                 <div className="flex-1">
                   <h3 className="text-base font-medium text-gray-900">
-                    {item.name}
+                    {item.title}
                   </h3>
-                  <p className="text-xs text-gray-400">{item.category}</p>
                   <p className="mt-1 text-sm font-semibold text-gray-800">
-                    ${item.price.toFixed(2)}
+                    {item.price.toFixed(2)} {item.currency}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Qty: {item.quantity}
                   </p>
                 </div>
 
@@ -102,7 +95,7 @@ export default function CartPage() {
           {/* Subtotal + Checkout */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-t pt-6">
             <div className="text-lg font-medium text-gray-900">
-              Subtotal: ${total.toFixed(2)}
+              Subtotal: {total.toFixed(2)} {cart[0]?.currency || "USD"}
             </div>
             <button
               onClick={() => router.push("/checkout")}

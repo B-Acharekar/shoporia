@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { Search, ChevronDown, ShoppingCart } from 'lucide-react';
+import { useCart } from "@/context/CartContext"; // adjust path if needed
 
 const categories = [
   { name: "New Electronics" },
@@ -19,6 +20,7 @@ const Navbar = () => {
   const { data: session } = useSession();
   const [query, setQuery] = useState('');
   const [showCategories, setShowCategories] = useState(false);
+  const { cart } = useCart();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,9 +137,11 @@ const Navbar = () => {
 
             <Link href="/cart" className="relative">
               <ShoppingCart size={22} />
-              <span className="absolute -top-1 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+              {cart.length > 0 && (
+                <span className="absolute -top-1 -right-2 text-xs bg-black text-white rounded-full w-5 h-5 flex items-center justify-center">
+                  {cart.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              )}
             </Link>
           </div>
         </nav>
