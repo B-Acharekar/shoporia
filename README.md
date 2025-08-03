@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shoporia
+
+**Shoporia** is a modern eCommerce web app built with cutting-edge technologies like **Next.js 15**, **TypeScript**, **Tailwind CSS**, and **MongoDB Atlas**. It supports smooth product discovery, category filtering, and a fully customizable storefront experience.
+
+**Live Site**: [https://shoporia-five.vercel.app](https://shoporia-five.vercel.app)
+
+---
+
+## Preview
+
+![Shoporia Preview](<img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/cb8d5560-de22-49d5-96fb-784b0737824d" />)
+
+---
+
+## Features
+
+- Product search with smart category filtering
+- Static + dynamic banners, brand showcases, and categories
+- Checkout-ready design (Stripe compatible)
+- Authentication (NextAuth + social login ready)
+- Shopping cart flow with persistent state
+- Modular, scalable file structure with App Router
+- Fully responsive & accessible UI
+
+---
+
+## Built With
+
+| Frontend             | Backend             | Utilities               |
+|----------------------|---------------------|--------------------------|
+| Next.js 15 (App Router) | MongoDB Atlas        | TypeScript, ESLint       |
+| Tailwind CSS         | NextAuth.js         | Unsplash & eBay APIs     |
+| React + Framer Motion | Stripe-ready (optional) | Vercel-hosted         |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/B-Acharekar/shoporia.git
+cd shoporia
+npm install
+````
+
+### 2. Setup Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret
+
+NEXT_PUBLIC_UNSPLASH_KEY=your-unsplash-key
+
+EBAY_ENV=production
+EBAY_CLIENT_ID=your-client-id
+EBAY_CLIENT_SECRET=your-client-secret
+EBAY_DEV_ID=your-dev-id
+EBAY_OAUTH_TOKEN=your-oauth-token
+```
+
+### 3. Run Dev Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Folder Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/             # Pages (App Router structure)
+│   ├── shop/        # Category/product search
+│   ├── dashboard/   # Admin interface
+│   └── api/         # Route handlers (eBay/Unsplash/etc)
+├── components/      # Shared UI and logic
+├── lib/             # Database, utils, auth logic
+├── styles/          # Tailwind and globals
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Planned Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Order tracking dashboard
+* Admin inventory controls
+* Reviews and rating system
+* Internationalization (i18n)
+* Multi-vendor support
+* SEO enhancements
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Feel free to **fork** the repo, suggest changes via **pull requests**, or open **issues** for bugs and feature requests.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Initialize Git
+git init
+git remote add origin https://github.com/B-Acharekar/shoporia.git
+```
+
+While you're here, check out other projects on my GitHub:
+[https://github.com/B-Acharekar](https://github.com/B-Acharekar)
+
+---
+
+## License
+
+This project is licensed under the **MIT License** — free to use and modify.
+
+---
+
+## Credits
+
+Built by [B-Acharekar](https://github.com/B-Acharekar)
+
