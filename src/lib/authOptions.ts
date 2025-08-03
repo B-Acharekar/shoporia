@@ -1,10 +1,11 @@
-import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { User as NextAuthUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
-import User from "@/models/User";
+// Rename your DB model import to avoid name conflict
+import DbUser from "@/models/User";
+import type { AuthOptions, User } from "next-auth"; // <-- this is the type!
+
 import { connectDB } from "./mongodb";
 
 const authOptions: AuthOptions = {
@@ -24,7 +25,7 @@ const authOptions: AuthOptions = {
 
         if (!credentials?.email || !credentials.password) return null;
 
-        const user = await User.findOne({ email: credentials.email });
+        const user = await DbUser.findOne({ email: credentials.email });
         if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(credentials.password, user.password || "");
@@ -51,9 +52,9 @@ const authOptions: AuthOptions = {
     },
     async signIn({ user }) {
       await connectDB();
-      const exisitingUser = await User.findOne({ email: user.email });
+      const exisitingUser = await DbUser.findOne({ email: user.email });
       if (!exisitingUser) {
-        await User.create({
+        await DbUser.create({
           name: user.name,
           email: user.email,
           image: user.image,
@@ -62,15 +63,15 @@ const authOptions: AuthOptions = {
       }
       return true;
     },
-    async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token.role = user.role || "user";
+        token.role = user.role ?? "user";
       }
       return token;
     },
     async session({ session, token }) {
       await connectDB();
-      const dbUser = await User.findOne({ email: session.user?.email });
+      const dbUser = await DbUser.findOne({ email: session.user?.email });
       if (session.user) {
         session.user.role = dbUser?.role || token.role || "user";
         session.user.id = dbUser?._id?.toString();
