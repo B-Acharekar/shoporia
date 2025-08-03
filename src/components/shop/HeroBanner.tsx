@@ -4,35 +4,34 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Initial banners (with product keywords instead of only static images)
 const banners = [
   {
     id: 1,
     keyword: 'season sale',
-    img: '/banners/sale1.jpg', // fallback to local if Unsplash fails
+    img: '/banners/sale1.jpg',
     title: 'Biggest Deals of the Season',
-    subtitle: 'Shop now and save up to 50%',
+    subtitle: 'Save up to 50% on top picks',
     link: '/shop',
   },
   {
     id: 2,
     keyword: 'electronics',
     img: '/banners/electronics.jpg',
-    title: 'Electronics Mega Sale',
-    subtitle: 'Top brands at unbeatable prices',
+    title: 'Electronics. Reinvented.',
+    subtitle: 'The brands you love, at prices you’ll love more.',
     link: '/shop?category=electronics',
   },
   {
     id: 3,
     keyword: 'fashion clothes',
     img: '/banners/fashion.jpg',
-    title: 'Trendy Fashion Picks',
-    subtitle: 'Upgrade your wardrobe today',
+    title: 'Fashion Without Limits',
+    subtitle: 'Elevate your style this season.',
     link: '/shop?category=fashion',
   },
 ];
 
-// Fetch dynamic Unsplash image
+// Fetch dynamic Unsplash fallback
 async function fetchFallbackImage(productName: string): Promise<string | null> {
   try {
     const res = await fetch(
@@ -40,9 +39,7 @@ async function fetchFallbackImage(productName: string): Promise<string | null> {
         productName
       )}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_KEY}`
     );
-
     if (!res.ok) return null;
-
     const data = await res.json();
     return data.results?.[0]?.urls?.regular || null;
   } catch (error) {
@@ -55,7 +52,7 @@ export default function HeroBanner() {
   const [index, setIndex] = useState(0);
   const [images, setImages] = useState<string[]>([]);
 
-  // Load Unsplash fallback images
+  // Load Unsplash fallback
   useEffect(() => {
     const loadImages = async () => {
       const results = await Promise.all(
@@ -69,11 +66,11 @@ export default function HeroBanner() {
     loadImages();
   }, []);
 
-  // Auto-slide every 5s
+  // Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % banners.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -83,14 +80,14 @@ export default function HeroBanner() {
     setIndex((prev) => (prev + 1) % banners.length);
 
   return (
-    <div className="relative w-full h-[420px] overflow-hidden rounded-xl shadow-md">
+    <div className="relative w-full h-[480px] md:h-[560px] overflow-hidden rounded-3xl bg-black">
       <AnimatePresence mode="wait">
         <motion.div
           key={banners[index].id}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
           className="absolute inset-0"
         >
           <img
@@ -98,12 +95,16 @@ export default function HeroBanner() {
             alt={banners[index].title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-start px-12 text-white">
-            <h2 className="text-4xl font-bold drop-shadow">{banners[index].title}</h2>
-            <p className="mt-2 text-lg drop-shadow">{banners[index].subtitle}</p>
+          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center px-6">
+            <h2 className="text-3xl md:text-5xl font-semibold text-white drop-shadow-md tracking-tight">
+              {banners[index].title}
+            </h2>
+            <p className="mt-3 text-lg md:text-xl text-gray-200 drop-shadow-sm">
+              {banners[index].subtitle}
+            </p>
             <a
               href={banners[index].link}
-              className="mt-4 px-6 py-2 bg-yellow-400 text-black font-medium rounded hover:bg-yellow-300 transition"
+              className="mt-6 px-8 py-3 bg-white text-black rounded-full font-medium text-base hover:bg-gray-100 transition"
             >
               Shop Now
             </a>
@@ -111,30 +112,28 @@ export default function HeroBanner() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Left arrow */}
+      {/* Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition"
+        className="absolute top-1/2 left-6 -translate-y-1/2 bg-black/40 backdrop-blur-sm p-2 rounded-full text-white hover:bg-black/60 transition"
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={28} />
       </button>
-
-      {/* Right arrow */}
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black transition"
+        className="absolute top-1/2 right-6 -translate-y-1/2 bg-black/40 backdrop-blur-sm p-2 rounded-full text-white hover:bg-black/60 transition"
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={28} />
       </button>
 
-      {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
         {banners.map((_, i) => (
           <button
             key={i}
             onClick={() => setIndex(i)}
             className={`w-3 h-3 rounded-full transition ${
-              i === index ? 'bg-white' : 'bg-white/50'
+              i === index ? 'bg-white' : 'bg-white/40'
             }`}
           />
         ))}

@@ -1,62 +1,74 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import HeroBanner from "@/components/shop/HeroBanner";
 import CategoryCarousel from "@/components/shop/CategoryCarousel";
 import FeaturedProducts from "@/components/shop/FeaturedProducts";
 import ProductGrid from "@/components/shop/ProductGrid";
 import PaginationControls from "@/components/shop/PaginationControls";
-import useEbayProducts from "@/hooks/useEbayProducts";
-import { useSearchParams } from "next/navigation";
+import RareFinds from "@/components/shop/RareFinds";
+import BestSellingBrands from "@/components/shop/BestSellingBrands";
+import TodaysDeals from "@/components/shop/TodayDeals";
 
 export default function ShopPage() {
   const searchParams = useSearchParams();
-  const queryParam = searchParams.get("q") || ""; 
+  const queryParam = searchParams.get("q") || "";
   const [page, setPage] = useState(1);
-
-  const { data, loading, error } = useEbayProducts(queryParam || "laptop", page);
 
   const isSearching = queryParam.trim().length > 0;
 
   return (
-    <div className="max-w-7xl mx-auto mt-28 px-4 sm:px-8">
-      {!isSearching && (
+    <div className="max-w-[1440px] mx-auto mt-24 mb-16 px-4 sm:px-8 lg:px-12 space-y-28">
+      {!isSearching ? (
         <>
           {/* Hero Banner */}
-          <section className="mb-12">
-            <HeroBanner />
-          </section>
+          <HeroBanner />
 
           {/* Categories */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
-              Shop by Category
-            </h2>
+          <section className="mt-20">
+            <div className="flex justify-between items-center mb-10">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                Browse by Categories
+              </h2>
+              <a
+                href="/shop?q=all"
+                className="text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                View all →
+              </a>
+            </div>
             <CategoryCarousel />
           </section>
 
           {/* Featured Products */}
-          <section className="mb-16">
+          <section className="bg-gradient-to-b from-gray-50 to-white py-16 px-6 rounded-3xl shadow-inner">
             <FeaturedProducts />
           </section>
+
+          {/* Rare Finds */}
+          <section>
+            <RareFinds />
+          </section>
+
+          {/* Best Selling Brands */}
+          <section>
+            <BestSellingBrands />
+          </section>
+
+          {/* Today's Deals */}
+          <section className="bg-gray-50 rounded-3xl shadow-sm p-8">
+            <TodaysDeals />
+          </section>
         </>
-      )}
+      ) : (
+        <>
+          <section>
+            <ProductGrid query={queryParam} page={page} setPage={setPage} />
+          </section>
 
-      {/* Main Product Grid */}
-      <section className="mb-16">
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <ProductGrid data={data} loading={loading} />
-      </section>
 
-      {/* Pagination (only show if search OR always?) */}
-      {isSearching && (
-        <section className="flex justify-center mb-20">
-          <PaginationControls
-            page={page}
-            totalPages={data?.totalPages || 1}
-            setPage={setPage}
-          />
-        </section>
+        </>
       )}
     </div>
   );

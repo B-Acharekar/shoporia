@@ -1,31 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const categories = [
-  { name: "Electronics", keyword: "electronics" },
-  { name: "Fashion", keyword: "fashion clothes" },
-  { name: "Home", keyword: "home decor" },
-  { name: "Toys", keyword: "kids toys" },
-  { name: "Sports", keyword: "sports equipment" },
+  { name: "New Electronics", keywords: ["electronics", "gadgets"], fallback: "/categories/electronics.jpg" },
+  { name: "Collectibles", keywords: ["collectibles", "art", "toys"], fallback: "/categories/collectibles.jpg" },
+  { name: "Parts & Accessories", keywords: ["car parts", "automotive"], fallback: "/categories/parts.jpg" },
+  { name: "Fashion", keywords: ["fashion", "clothing", "style"], fallback: "/categories/fashion.jpg" },
+  { name: "Health & Beauty", keywords: ["beauty products", "skincare"], fallback: "/categories/beauty.jpg" },
+  { name: "Home & Garden", keywords: ["home decor", "garden"], fallback: "/categories/home.jpg" },
+  { name: "Refurbished", keywords: ["refurbished electronics", "renewed"], fallback: "/categories/refurbished.jpg" },
 ];
 
-async function fetchCategoryImage(keyword: string): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
-        keyword
-      )}&per_page=1&orientation=squarish&client_id=${
-        process.env.NEXT_PUBLIC_UNSPLASH_KEY
-      }`
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.results?.[0]?.urls?.small || null;
-  } catch (error) {
-    console.error("Unsplash category image failed:", error);
-    return null;
+async function fetchCategoryImage(keywords: string[]): Promise<string | null> {
+  for (const keyword of keywords) {
+    try {
+      const res = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(keyword)}&per_page=1&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_KEY}`
+      );
+      if (!res.ok) continue;
+
+      const data = await res.json();
+      if (data.results?.length > 0) {
+        return data.results[0].urls.small;
+      }
+    } catch (error) {
+      console.error(`Unsplash failed for ${keyword}:`, error);
+    }
   }
+  return null;
 }
 
 export default function CategoryCarousel() {
@@ -33,32 +37,48 @@ export default function CategoryCarousel() {
 
   useEffect(() => {
     const loadImages = async () => {
-      const results: Record<string, string> = {};
-      for (const cat of categories) {
-        const img = await fetchCategoryImage(cat.keyword);
-        results[cat.name] = img || "/no-image.png"; // fallback placeholder
-      }
+      const cached = localStorage.getItem("categoryImages");
+      let results: Record<string, string> = cached ? JSON.parse(cached) : {};
+
+      // fetch only for missing categories
+      await Promise.all(
+        categories.map(async (cat) => {
+          if (!results[cat.name]) {
+            const img = await fetchCategoryImage(cat.keywords);
+            results[cat.name] = img || cat.fallback;
+          }
+        })
+      );
+
       setImages(results);
+      localStorage.setItem("categoryImages", JSON.stringify(results));
     };
+
     loadImages();
   }, []);
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 mb-8 scrollbar-hide">
+    <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide">
       {categories.map((cat) => (
-        <div
+        <Link
+          href={`/shop?q=${encodeURIComponent(cat.keywords[0])}`}
           key={cat.name}
-          className="flex-shrink-0 w-32 cursor-pointer group"
+          className="flex-shrink-0 w-28 sm:w-32 md:w-36 group"
         >
-          <img
-            src={images[cat.name]}
-            alt={cat.name}
-            className="w-full h-24 object-cover rounded-lg shadow-sm group-hover:shadow-md transition"
-          />
-          <p className="mt-2 text-center font-medium group-hover:text-yellow-600 transition">
+          <div className="w-full h-28 sm:h-32 md:h-36 rounded-full overflow-hidden border shadow-sm bg-white group-hover:shadow-lg group-hover:scale-105 transition">
+            <img
+              src={images[cat.name] || cat.fallback}
+              alt={cat.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = cat.fallback;
+              }}
+            />
+          </div>
+          <p className="mt-3 text-center font-medium text-gray-800 text-sm group-hover:text-black transition">
             {cat.name}
           </p>
-        </div>
+        </Link>
       ))}
     </div>
   );

@@ -12,6 +12,8 @@ export interface EbayItem {
     imageUrl: string;
   }[];
 resolvedImage?: string;
+itemWebUrl?: string;
+itemAffiliateWebUrl?: string;
 
 }
 
