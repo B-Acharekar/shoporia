@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 const banners = [
   {
@@ -90,7 +91,7 @@ export default function HeroBanner() {
           transition={{ duration: 0.8 }}
           className="absolute inset-0"
         >
-          <img
+          <Image
             src={images[index] || banners[index].img}
             alt={banners[index].title}
             className="w-full h-full object-cover"

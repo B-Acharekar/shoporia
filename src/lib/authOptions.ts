@@ -1,6 +1,7 @@
 import type { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { User as NextAuthUser } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
 import User from "@/models/User";
@@ -44,7 +45,7 @@ const authOptions: AuthOptions = {
   },
 
   callbacks: {
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       // Always go to /shop after login
       return `${baseUrl}/shop`;
     },
@@ -61,7 +62,7 @@ const authOptions: AuthOptions = {
       }
       return true;
     },
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
       if (user) {
         token.role = user.role || "user";
       }

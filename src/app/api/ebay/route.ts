@@ -66,7 +66,11 @@ export async function GET(req: NextRequest) {
     );
 
     const itemsWithFallback = await Promise.all(
-      (response.data.itemSummaries || []).map(async (item: any) => {
+      (response.data.itemSummaries || []).map(async (item: {
+        title: string;
+        image?: { imageUrl?: string };
+        additionalImages?: { imageUrl?: string }[];
+      }) => {
         let imageUrl =
           item.image?.imageUrl ||
           item.additionalImages?.[0]?.imageUrl ||
@@ -76,7 +80,6 @@ export async function GET(req: NextRequest) {
           const fallback = await fetchFallbackImage(item.title);
           imageUrl = fallback || "/no-image.png";
         }
-
         return { ...item, resolvedImage: imageUrl };
       })
     );

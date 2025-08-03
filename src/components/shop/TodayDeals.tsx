@@ -3,6 +3,8 @@
 import useEbayProducts from "@/hooks/useEbayProducts";
 import Link from "next/link";
 import SkeletonCard from "@/components/SkeletonCard"; // create if not already
+import { EbayItem } from "@/types/ebay";
+import Image from "next/image";
 
 export default function TodaysDeals() {
   // Default query is "trending"
@@ -36,7 +38,7 @@ export default function TodaysDeals() {
           ? Array.from({ length: 8 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))
-          : data?.items?.slice(0, 10).map((item: any) => (
+          : data?.items?.slice(0, 10).map((item: EbayItem) => (
               <Link
                 key={item.itemId}
                 href={`/shop?q=${encodeURIComponent(item.title)}`}
@@ -44,8 +46,8 @@ export default function TodaysDeals() {
                            shadow-sm hover:shadow-lg transition transform hover:-translate-y-1"
               >
                 <div className="w-full h-44 flex items-center justify-center bg-gray-50 overflow-hidden">
-                  <img
-                    src={item.resolvedImage}
+                  <Image
+                    src={item.resolvedImage?? `./no-image.png`}
                     alt={item.title}
                     className="max-h-full max-w-full object-contain p-4 
                                group-hover:scale-105 transition-transform duration-500"

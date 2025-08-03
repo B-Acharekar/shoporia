@@ -51,8 +51,13 @@ export async function GET(req: NextRequest) {
         item.additionalImages?.[0]?.imageUrl ||
         "/no-image.png",
     });
-  } catch (error: any) {
-    console.error("eBay Item fetch failed:", error.response?.data || error);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("eBay Item fetch failed:", error.response?.data || error.message);
+    } else {
+      console.error("eBay Item fetch failed:", error);
+    }
+
     return NextResponse.json(
       { error: "eBay item fetch failed" },
       { status: 500 }

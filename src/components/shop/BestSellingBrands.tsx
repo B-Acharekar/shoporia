@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const brands = ["Apple", "Samsung", "Nike", "Sony", "Lego"];
 
@@ -47,14 +48,16 @@ export default function BestSellingBrands() {
                        shadow-sm hover:shadow-lg transition transform hover:-translate-y-1"
           >
             <div className="w-full h-36 bg-gray-50 flex items-center justify-center overflow-hidden">
-              <img
+              <Image
                 src={images[brand] || `/brands/${brand.toLowerCase()}.png`}
                 alt={brand}
+                width={200}
+                height={200}
                 className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-4"
-                onError={(e) =>
-                  ((e.target as HTMLImageElement).src =
-                    `/brands/${brand.toLowerCase()}.png`)
-                }
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  target.src = `/brands/${brand.toLowerCase()}.png`;
+                }}
               />
             </div>
             <div className="p-3 text-center">

@@ -5,9 +5,8 @@ import Link from "next/link";
 import SkeletonCard from "@/components/SkeletonCard";
 import useEbayProducts from "@/hooks/useEbayProducts";
 import PaginationControls from "./PaginationControls";
-import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext"; // ✅ Use CartContext
-import { EbayItem } from "@/types/ebay";
+import { useCart } from "@/context/CartContext";
+import Image from "next/image";
 
 interface ProductGridProps {
   query: string;
@@ -111,8 +110,8 @@ export default function ProductGrid({ query, page, setPage }: ProductGridProps) 
                     className="block"
                   >
                     <div className="w-full h-60 flex items-center justify-center bg-gray-50">
-                      <img
-                        src={item.resolvedImage}
+                      <Image
+                        src={item.resolvedImage?? `./no-image.png`}
                         alt={item.title}
                         className="max-h-full max-w-full object-contain p-6 
                                  group-hover:scale-105 transition-transform duration-500"

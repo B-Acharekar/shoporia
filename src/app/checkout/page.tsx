@@ -118,8 +118,14 @@ export default function CheckoutPage() {
       );
       clearCart();
       router.push('/shop');
-    } catch (error) {
+    } catch (error: unknown) {
       showToast('error', 'Payment failed. Please try again.');
+
+      if (error instanceof Error) {
+        console.error('Payment error:', error.message);
+      } else {
+        console.error('Unknown payment error:', error);
+      }
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const categories = [
   { name: "New Electronics", keywords: ["electronics", "gadgets"], fallback: "/categories/electronics.jpg" },
@@ -38,7 +39,7 @@ export default function CategoryCarousel() {
   useEffect(() => {
     const loadImages = async () => {
       const cached = localStorage.getItem("categoryImages");
-      let results: Record<string, string> = cached ? JSON.parse(cached) : {};
+      const results: Record<string, string> = cached ? JSON.parse(cached) : {};
 
       // fetch only for missing categories
       await Promise.all(
@@ -66,9 +67,11 @@ export default function CategoryCarousel() {
           className="flex-shrink-0 w-28 sm:w-32 md:w-36 group"
         >
           <div className="w-full h-28 sm:h-32 md:h-36 rounded-full overflow-hidden border shadow-sm bg-white group-hover:shadow-lg group-hover:scale-105 transition">
-            <img
+            <Image
               src={images[cat.name] || cat.fallback}
               alt={cat.name}
+              width={200}
+              height={200}
               className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = cat.fallback;

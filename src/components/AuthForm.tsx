@@ -2,7 +2,6 @@
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { signIn } from "next-auth/react";
-import { useAuth } from '@/context/AuthContext';
 import { showToast } from '@/lib/toast';
 
 interface AuthFormProps {
@@ -61,7 +60,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           redirect: true,
           callbackUrl: "/shop",
         });
-      } catch (err) {
+      } catch (err: unknown) {
         setError("Something went wrong");
         showToast("error", "Something went wrong");
       }

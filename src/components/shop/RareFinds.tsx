@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 // Rare Finds Categories
 const rareFinds = [
@@ -56,7 +57,7 @@ export default function RareFinds() {
                        shadow-sm hover:shadow-lg transition transform hover:-translate-y-1"
           >
             <div className="w-full h-36 bg-gray-50 overflow-hidden">
-              <img
+              <Image
                 src={images[q] || "/no-image.png"}
                 alt={q}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

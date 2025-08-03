@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import useEbayProducts from "@/hooks/useEbayProducts";
 import SkeletonCard from "@/components/SkeletonCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 function FeaturedRow({ title, query }: { title: string; query: string }) {
   const { data, loading } = useEbayProducts(query, 1);
@@ -68,49 +69,50 @@ function FeaturedRow({ title, query }: { title: string; query: string }) {
         >
           {loading
             ? Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="min-w-[220px]">
-                  <SkeletonCard />
-                </div>
-              ))
+              <div key={i} className="min-w-[220px]">
+                <SkeletonCard />
+              </div>
+            ))
             : data?.items?.slice(0, 12).map((item) => (
-                <div
-                  key={item.itemId}
-                  className="min-w-[220px] max-w-[220px] bg-white rounded-lg 
+              <div
+                key={item.itemId}
+                className="min-w-[220px] max-w-[220px] bg-white rounded-lg 
                              border border-gray-200 shadow-sm snap-start 
                              hover:shadow-lg hover:border-blue-400 
                              hover:-translate-y-1 hover:scale-105 
                              transition transform duration-300"
-                >
-                  {/* Image */}
-                  <div className="w-full h-48 flex items-center justify-center bg-gray-50 rounded-t-lg overflow-hidden">
-                    <img
-                      src={item.resolvedImage}
-                      alt={item.title}
-                      className="max-h-full max-w-full object-contain p-3 transition-transform group-hover:scale-105"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <div className="px-3 py-3">
-                    <p className="truncate text-sm font-medium text-gray-700 leading-snug">
-                      {item.title}
-                    </p>
-                    <p className="font-bold text-gray-900 mt-1">
-                      {item.price?.value} {item.price?.currency}
-                    </p>
-                    {item.itemAffiliateWebUrl && (
-                      <a
-                        href={item.itemAffiliateWebUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-2 block text-xs text-blue-600 hover:underline"
-                      >
-                        View on eBay
-                      </a>
-                    )}
-                  </div>
+              >
+                {/* Image */}
+                <div className="w-full h-48 flex items-center justify-center bg-gray-50 rounded-t-lg overflow-hidden">
+                  <Image
+                    src={item.resolvedImage ?? "/no-image.png"}
+                    alt={item.title}
+                    width={300}
+                    height={300}
+                  />
                 </div>
-              ))}
+
+                {/* Info */}
+                <div className="px-3 py-3">
+                  <p className="truncate text-sm font-medium text-gray-700 leading-snug">
+                    {item.title}
+                  </p>
+                  <p className="font-bold text-gray-900 mt-1">
+                    {item.price?.value} {item.price?.currency}
+                  </p>
+                  {item.itemAffiliateWebUrl && (
+                    <a
+                      href={item.itemAffiliateWebUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 block text-xs text-blue-600 hover:underline"
+                    >
+                      View on eBay
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
         </div>
 
         {/* Right Arrow */}
